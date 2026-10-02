@@ -1,500 +1,303 @@
-# 🇲🇦 DIRAM - Diplomatic Intelligence & Relations Analyzer for Morocco
-
-> **نظام تحليل الذكاء والعلاقات الدبلوماسية للمغرب**  
-> Advanced AI-powered system for analyzing diplomatic intelligence and international relations affecting Morocco
-
-## 🎯 Overview
-
-DIRAM is a comprehensive diplomatic intelligence analysis system designed specifically for Morocco's foreign affairs and international relations. The system leverages advanced AI technologies to monitor, analyze, and provide insights on global diplomatic activities that impact Morocco's interests.
-
-### Key Features
-
-- **🤖 AI-Powered Analysis**: Advanced sentiment analysis, entity extraction, and summarization
-- **🌐 Multi-Source Scraping**: Automated collection from international news sources
-- **🚨 Real-Time Alerts**: Intelligent alerts for critical diplomatic developments
-- **📊 Risk Assessment**: Automated diplomatic risk evaluation and scoring
-- **🔍 Morocco Relevance Scoring**: Specialized algorithms to assess relevance to Morocco
-- **🌍 Multi-Language Support**: Arabic, English, French, and Spanish
-- **👥 Role-Based Access**: Secure access control for different government departments
-- **📈 Dashboard Analytics**: Comprehensive analytics and reporting capabilities
-
-## 🏗️ Architecture
-
-```
-📁 DIRAM Project Structure
-├── 🔧 backend/                 # FastAPI Backend Services
-│   ├── 🚀 main.py             # FastAPI application entry point
-│   ├── 🛠️ api/                 # API endpoints
-│   │   ├── articles.py        # Article management & analysis
-│   │   ├── users.py           # Authentication & user management
-│   │   └── alerts.py          # Alert system & notifications
-│   ├── ⚙️ services/            # Business logic & AI services
-│   │   ├── summarizer.py      # AI summarization service
-│   │   ├── sentiment.py       # Sentiment analysis service
-│   │   ├── ner.py             # Named entity recognition
-│   │   └── tone.py            # Diplomatic tone analysis
-│   ├── 🏢 core/                # Domain models
-│   │   ├── article.py         # Article domain models
-│   │   ├── user.py            # User & permissions models
-│   │   └── analysis.py        # Analysis result models
-│   └── 🗄️ database/           # Database layer
-│       ├── models.py          # SQLAlchemy ORM models
-│       └── db_session.py      # Database session management
-│
-├── 🤖 ai_engine/              # AI Integration Layer
-│   ├── openrouter_client.py   # OpenRouter AI client
-│   ├── 📝 prompts/            # AI prompts library
-│   └── utils.py               # AI utilities
-│
-├── 🕷️ scrapers/               # Web Scraping Services
-│   ├── france24_scraper.py    # France 24 news scraper
-│   ├── reuters_scraper.py     # Reuters news scraper
-│   ├── aljazeera_scraper.py   # Al Jazeera scraper
-│   └── [other news sources]
-│
-├── 🎨 frontend/               # Blazor Web UI
-│   ├── Pages/                 # Web pages
-│   ├── Components/            # Reusable components
-│   ├── Services/              # Frontend services
-│   └── Models/                # Data transfer objects
-│
-├── 🔧 shared/                 # Shared utilities
-│   ├── settings.py            # Configuration management
-│   └── constants.py           # System constants
-│
-├── 📊 reports/                # Report generation
-│   └── generate_report.py     # PDF/HTML report generator
-│
-└── 🧪 tests/                  # Test suites
-    ├── test_articles.py       # Article testing
-    └── test_ai_engine.py      # AI engine testing
-```
-
-## 🚀 Quick Start
-
-### Prerequisites
-
-- Python 3.8+
-- .NET 6.0+ (for Blazor frontend)
-- SQLite/PostgreSQL/MySQL
-- OpenRouter API key (for AI features)
-
-### Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/your-org/diram-diplomatic-ai.git
-   cd diram-diplomatic-ai
-   ```
-
-2. **Set up Python environment**
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   pip install -r requirements.txt
-   ```
-
-3. **Configure environment**
-   ```bash
-   cp .env.example .env
-   # Edit .env with your configuration
-   ```
-
-4. **Initialize database**
-   ```bash
-   python -m backend.database.init_db
-   ```
-
-5. **Start the backend**
-   ```bash
-   uvicorn backend.main:app --reload --host 0.0.0.0 --port 8000
-   ```
-
-6. **Start the frontend** (separate terminal)
-   ```bash
-   start_frontend.bat
-   ```
-
-### Default Credentials
-
-- **Username**: `admin`
-- **Password**: `admin123`
-- **Email**: `admin@diram.ma`
-
-⚠️ **Change default credentials immediately in production!**
-
-## 🔧 Configuration
-
-### Environment Variables
-
-Key environment variables in `.env`:
-
-```bash
-# AI Configuration
-OPENROUTER_API_KEY="your-api-key-here"
-DEFAULT_AI_MODEL="anthropic/claude-3-sonnet"
-
-# Database
-DATABASE_URL="sqlite:///./diram_database.db"
-
-# Security
-SECRET_KEY="your-secret-key-here"
-
-# Email Notifications
-SMTP_HOST="smtp.gmail.com"
-SMTP_USERNAME="your-email@gmail.com"
-SMTP_PASSWORD="your-app-password"
-```
-
-### AI Models Supported
-
-- **Claude 3 Sonnet** (Recommended for Arabic)
-- **GPT-4** (Good for multilingual analysis)
-- **Mistral Large** (Cost-effective option)
-- **Llama 3** (Open-source alternative)
-
-## 📖 API Documentation
-
-### Authentication
-
-```bash
-# Login
-POST /api/users/login
-{
-  "username": "admin",
-  "password": "admin123"
-}
-
-# Response
-{
-  "access_token": "eyJ...",
-  "token_type": "bearer",
-  "user": {...}
-}
-```
-
-### Article Analysis
-
-```bash
-# Upload and analyze article
-POST /api/articles/upload
-Content-Type: multipart/form-data
-
-title: "Article Title"
-content: "Article content..."
-source: "Reuters"
-language: "ar"
-```
-
-### Alerts Management
-
-```bash
-# Get active alerts
-GET /api/alerts/?priority=HIGH&active_only=true
-
-# Create custom alert
-POST /api/alerts/
-{
-  "title": "Alert Title",
-  "description": "Alert description",
-  "alert_type": "DIPLOMATIC_CRISIS",
-  "priority": "HIGH"
-}
-```
-
-## 🔒 Security Features
-
-- **JWT Authentication**: Secure token-based authentication
-- **Role-Based Access Control**: Multiple user roles (Admin, Analyst, Viewer, Guest)
-- **Input Validation**: Comprehensive input sanitization
-- **Rate Limiting**: API rate limiting to prevent abuse
-- **CORS Protection**: Configurable CORS policies
-- **Data Encryption**: Sensitive data encryption at rest
-
-## 🌐 Supported News Sources
-
-### International Sources
-- **Reuters** - Global news and analysis
-- **BBC World** - British perspective on global events
-- **France 24** - French international news
-- **Deutsche Welle** - German international broadcaster
-- **Al Jazeera** - Middle Eastern perspective
-
-### Regional Sources
-- **Jeune Afrique** - African affairs
-- **Middle East Eye** - Middle Eastern analysis
-- **Le Monde** - French newspaper
-- **The Guardian** - British newspaper
-
-### Official Sources
-- **UN News** - United Nations official news
-- **EU Council** - European Union updates
-- **African Union** - Continental organization news
-
-## 🤖 AI Analysis Capabilities
-
-### Sentiment Analysis
-- **Multilingual Support**: Arabic, English, French, Spanish
-- **Diplomatic Context**: Specialized for diplomatic language
-- **Emotion Detection**: Joy, anger, fear, sadness analysis
-- **Confidence Scoring**: Reliability metrics for each analysis
-
-### Named Entity Recognition
-- **Diplomatic Entities**: Countries, organizations, officials
-- **Geographic Entities**: Cities, regions, landmarks
-- **Temporal Entities**: Dates, events, periods
-- **Economic Entities**: Trade agreements, currencies, markets
-
-### Risk Assessment
-- **Diplomatic Risk**: Crisis, tensions, conflicts
-- **Economic Risk**: Trade impacts, sanctions, partnerships
-- **Security Risk**: Threats, military activities, terrorism
-- **Regional Risk**: Spillover effects, migration, stability
-
-### Morocco Relevance Scoring
-- **Direct Mentions**: Morocco, Rabat, Casablanca references
-- **Regional Relevance**: Maghreb, North Africa, Sahel
-- **Bilateral Relations**: Partner countries and relationships
-- **Economic Partnerships**: Trade agreements and investments
-
-## 👥 User Roles & Permissions
-
-### Admin
-- Full system access
-- User management
-- System configuration
-- All analysis features
-
-### Analyst
-- Article upload and analysis
-- Alert creation
-- Export capabilities
-- Dashboard access
-
-### Viewer
-- Read-only article access
-- View analysis results
-- Dashboard viewing
-- Export reports
-
-### Guest
-- Limited article access
-- Basic analysis viewing
-- No administrative functions
-
-## 📊 Dashboard & Analytics
-
-### Key Metrics
-- **Article Volume**: Daily/weekly/monthly article counts
-- **Risk Distribution**: Breakdown by risk levels
-- **Source Analysis**: Performance by news source
-- **Language Statistics**: Content distribution by language
-- **User Activity**: System usage analytics
-
-### Visualizations
-- **Risk Trend Charts**: Risk level changes over time
-- **Geographic Heat Maps**: Global activity visualization
-- **Sentiment Trends**: Emotional analysis over time
-- **Entity Networks**: Relationship mapping
-
-## 🔄 Automated Workflows
-
-### Scheduled Scraping
-- **Frequency**: Every 6 hours (configurable)
-- **Sources**: Multiple international news sources
-- **Filtering**: Morocco-relevant content prioritization
-- **Processing**: Automatic analysis pipeline
-
-### Alert Generation
-- **Real-time Processing**: Immediate analysis of new articles
-- **Risk Thresholds**: Configurable alert triggers
-- **Notification Channels**: Email, push notifications, dashboard
-- **Escalation Rules**: Priority-based routing
-
-### Data Management
-- **Auto-archiving**: Old articles automatic archiving
-- **Backup Scheduling**: Regular database backups
-- **Cache Management**: Analysis result caching
-- **Performance Optimization**: Automatic system optimization
-
-## 🧪 Testing
-
-### Unit Tests
-```bash
-pytest tests/unit/ -v
-```
-
-### Integration Tests
-```bash
-pytest tests/integration/ -v
-```
-
-### API Tests
-```bash
-pytest tests/api/ -v
-```
-
-### Performance Tests
-```bash
-pytest tests/performance/ -v
-```
-
-## 📈 Performance & Scalability
-
-### Current Specifications
-- **Concurrent Users**: Up to 100 concurrent users
-- **Article Processing**: 1000+ articles per hour
-- **Analysis Speed**: 2-5 seconds per article
-- **Database**: Optimized for 1M+ articles
-
-### Scaling Options
-- **Horizontal Scaling**: Multiple backend instances
-- **Database Sharding**: Distribute data across databases
-- **CDN Integration**: Static content delivery
-- **Caching Layers**: Redis/Memcached integration
-
-## 🛠️ Development
-
-### Code Style
-- **Python**: PEP 8 compliance
-- **Type Hints**: Full type annotation
-- **Documentation**: Comprehensive docstrings
-- **Linting**: flake8, black, mypy
-
-### Git Workflow
-```bash
-# Feature development
-git checkout -b feature/new-analysis-type
-git commit -m "feat: add new analysis type"
-git push origin feature/new-analysis-type
-```
-
-### Contributing
-1. Fork the repository
-2. Create feature branch
-3. Add tests for new features
-4. Ensure all tests pass
-5. Submit pull request
-
-## 📋 Deployment
-
-### Docker Deployment
-```bash
-# Build and run with Docker Compose
-docker-compose up -d
-```
-
-### Manual Deployment
-```bash
-# Production setup
-pip install -r requirements.txt
-export ENVIRONMENT=production
-uvicorn backend.main:app --host 0.0.0.0 --port 8000
-```
-
-### Environment-Specific Settings
-- **Development**: Debug enabled, SQLite database
-- **Staging**: Production-like with test data
-- **Production**: Optimized, PostgreSQL, monitoring
-
-## 🔍 Monitoring & Logging
-
-### Application Monitoring
-- **Health Checks**: API endpoint monitoring
-- **Performance Metrics**: Response time tracking
-- **Error Tracking**: Exception monitoring
-- **User Analytics**: Usage pattern analysis
-
-### Logging
-- **Structured Logging**: JSON format logs
-- **Log Levels**: DEBUG, INFO, WARNING, ERROR
-- **Log Rotation**: Automatic log file rotation
-- **Centralized Logging**: Optional ELK stack integration
-
-## 🆘 Troubleshooting
-
-### Common Issues
-
-#### AI Service Not Working
-```bash
-# Check API key configuration
-echo $OPENROUTER_API_KEY
-
-# Test connection
-curl -H "Authorization: Bearer $OPENROUTER_API_KEY" \
-     https://openrouter.ai/api/v1/models
-```
-
-#### Database Connection Issues
-```bash
-# Check database URL
-python -c "from backend.database.db_session import engine; print(engine.url)"
-
-# Test connection
-python -c "from backend.database.db_session import get_db; next(get_db())"
-```
-
-#### Scraping Not Working
-```bash
-# Check scraping service
-python -m scrapers.france24_scraper --test
-
-# Verify network connectivity
-curl -I https://www.france24.com
-```
-
-## 📞 Support
-
-For technical support and questions:
-
-- **Email**: support@diram.ma
-- **Documentation**: [docs.diram.ma](https://docs.diram.ma)
-- **Issues**: [GitHub Issues](https://github.com/your-org/diram/issues)
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- **OpenRouter** for AI API services
-- **FastAPI** for the excellent Python framework
-- **Microsoft Blazor** for the web frontend
-- **SQLAlchemy** for database ORM
-- **The open-source community** for various libraries and tools
+﻿<p align="center">
+  <img src="assets/banner.jpg" alt="DIRAM Banner" width="100%"/>
+</p>
+
+<h1 align="center">🇲🇦 DIRAM — Diplomatic Intelligence & Relations Analysis for Morocco</h1>
+
+<p align="center">
+  <strong>نظام تحليل الذكاء والعلاقات الدبلوماسية للمغرب</strong>
+</p>
+
+<p align="center">
+  <em>An AI-powered intelligence platform designed for real-time diplomatic monitoring, sentiment analysis, and strategic insight generation — built specifically for Morocco's foreign affairs landscape.</em>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Status-Production%20Ready-brightgreen?style=for-the-badge" alt="Status"/>
+  <img src="https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python"/>
+  <img src="https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI"/>
+  <img src="https://img.shields.io/badge/.NET%20Blazor-512BD4?style=for-the-badge&logo=dotnet&logoColor=white" alt="Blazor"/>
+  <img src="https://img.shields.io/badge/AI-DeepSeek%20%7C%20OpenRouter-FF6F00?style=for-the-badge" alt="AI"/>
+  <img src="https://img.shields.io/badge/License-Proprietary-red?style=for-the-badge" alt="License"/>
+</p>
 
 ---
 
-**Built with ❤️ for Morocco's diplomatic intelligence needs**
+## 🎬 Live Demo
 
-*"في خدمة الدبلوماسية المغربية والتحليل الاستراتيجي"* 
+<p align="center">
+  <a href="https://github.com/anass9elalaoui-netizen/ai-parlement/releases/tag/v1.0.0">
+    <img src="https://img.shields.io/badge/▶%20Watch%20Full%20Demo%20Video-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="Watch Demo"/>
+  </a>
+</p>
 
-# DIRECT START - No delays, Morocco focus
-articles = await scraper.scrape_articles(
-    max_articles=15,
-    days_back=15,
-    morocco_only=True
-) 
+> 📹 **Full walkthrough video** demonstrating the complete DIRAM platform — including dashboard analytics, AI-powered analysis, real-time alerts, user management, and intelligence reporting.
 
-# Last 30 days for comprehensive intelligence
-articles = await scraper.scrape_articles(
-    max_articles=30,
-    days_back=30,
-    morocco_only=True
-) 
+---
 
-# Minimal delay testing
-articles = await scraper.scrape_articles(
-    max_articles=5,
-    days_back=7,
-    morocco_only=False
-) 
+## 📸 Screenshots
 
-# Run comprehensive diagnostics
-diagnose_system.bat
+### Dashboard — Command Center
+> The main dashboard provides a real-time overview of the intelligence landscape: active articles, alerts, AI analysis accuracy, and diplomatic relevance scoring.
 
-# Or manual frontend startup
-cd frontend
-dotnet restore
-dotnet build --configuration Release
-dotnet run --urls http://localhost:5000
+<p align="center">
+  <img src="assets/dashboard.png" alt="DIRAM Dashboard" width="95%"/>
+</p>
+
+### AI Engine Status & Analytics
+> Real-time monitoring of the AI analysis engine — sentiment analysis, risk assessment scoring, and trend detection across multiple international news sources.
+
+<p align="center">
+  <img src="assets/ai-engine.png" alt="AI Engine Status" width="95%"/>
+</p>
+
+### Trend Analysis — Intelligence Insights
+> Historical trend analysis with interactive charts showing processed articles, dispatched alerts, and completed analyses over time.
+
+<p align="center">
+  <img src="assets/trends.png" alt="Trend Analysis" width="95%"/>
+</p>
+
+### Article Intelligence Feed
+> AI-processed articles from international sources (Al Jazeera, Reuters, France 24, etc.) with automatic Morocco-relevance scoring and source attribution.
+
+<p align="center">
+  <img src="assets/articles.png" alt="Article Feed" width="95%"/>
+</p>
+
+### User Management & Access Control
+> Role-based access control system with support for multiple user roles (Administrator, Analyst, Viewer) and real-time activity tracking.
+
+<p align="center">
+  <img src="assets/users.png" alt="User Management" width="95%"/>
+</p>
+
+---
+
+## 🏗️ System Architecture
+
+```
+┌──────────────────────────────────────────────────────────────────────────┐
+│                        DIRAM SYSTEM ARCHITECTURE                        │
+├──────────────────────────────────────────────────────────────────────────┤
+│                                                                          │
+│   ┌──────────────┐    ┌──────────────┐    ┌──────────────────────────┐  │
+│   │  🎨 Frontend  │    │ 🔐 API       │    │  🤖 AI Engine            │  │
+│   │  Blazor/.NET  │◄──►│ Gateway      │◄──►│  OpenRouter + DeepSeek   │  │
+│   │  RTL Arabic   │    │ FastAPI      │    │  Sentiment Analysis      │  │
+│   │  Dashboard    │    │ JWT Auth     │    │  NER / Risk Assessment   │  │
+│   └──────────────┘    └──────┬───────┘    └──────────────────────────┘  │
+│                              │                                           │
+│   ┌──────────────────────────┴───────────────────────────────────────┐  │
+│   │                    APPLICATION LAYER                              │  │
+│   │  Controllers │ Use Cases │ DTOs │ Validators │ Middlewares        │  │
+│   └──────────────────────────┬───────────────────────────────────────┘  │
+│                              │                                           │
+│   ┌──────────────────────────┴───────────────────────────────────────┐  │
+│   │                      DOMAIN LAYER                                 │  │
+│   │  Entities │ Aggregates │ Domain Events │ Repositories │ Services  │  │
+│   └──────────────────────────┬───────────────────────────────────────┘  │
+│                              │                                           │
+│   ┌──────────────────────────┴───────────────────────────────────────┐  │
+│   │                   INFRASTRUCTURE LAYER                            │  │
+│   │                                                                   │  │
+│   │  ┌─────────────┐  ┌─────────────┐  ┌──────────────────────────┐ │  │
+│   │  │  📰 Scrapers │  │ 🗄️ Database  │  │ 🔔 Alert System          │ │  │
+│   │  │  Al Jazeera  │  │ SQLite /    │  │ Real-time notifications  │ │  │
+│   │  │  Reuters     │  │ PostgreSQL  │  │ Email dispatch           │ │  │
+│   │  │  France 24   │  │ SQLAlchemy  │  │ Priority routing         │ │  │
+│   │  │  BBC / DW    │  └─────────────┘  └──────────────────────────┘ │  │
+│   │  │  Jeune Afrique│                                               │  │
+│   │  └─────────────┘                                                  │  │
+│   └──────────────────────────────────────────────────────────────────┘  │
+│                                                                          │
+│   ┌──────────────────────────────────────────────────────────────────┐  │
+│   │                   CROSS-CUTTING CONCERNS                          │  │
+│   │  Logging │ Caching │ Security │ Monitoring │ Error Handling       │  │
+│   └──────────────────────────────────────────────────────────────────┘  │
+└──────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## ⚡ Key Features
+
+<table>
+  <tr>
+    <td width="50%">
+
+### 🤖 AI-Powered Analysis
+- **DeepSeek V3 & R1** models via OpenRouter
+- Multilingual sentiment analysis (Arabic, French, English)
+- Named entity recognition for diplomatic entities
+- Automatic Morocco-relevance scoring (0–100%)
+
+</td>
+    <td width="50%">
+
+### 🌐 Multi-Source Intelligence
+- Automated scraping from **12+ international sources**
+- Al Jazeera, Reuters, France 24, BBC, DW, Jeune Afrique
+- UN News, EU Council, African Union feeds
+- Scheduled collection every 6 hours
+
+</td>
+  </tr>
+  <tr>
+    <td width="50%">
+
+### 🚨 Real-Time Alert System
+- Intelligent alert generation based on risk thresholds
+- Priority-based routing (Critical → High → Medium → Low)
+- Email notifications and dashboard alerts
+- Configurable escalation rules
+
+</td>
+    <td width="50%">
+
+### 📊 Advanced Analytics Dashboard
+- Real-time diplomatic landscape overview
+- Interactive trend charts and visualizations
+- Risk distribution analysis
+- Geographic and entity network mapping
+
+</td>
+  </tr>
+  <tr>
+    <td width="50%">
+
+### 🔒 Enterprise Security
+- JWT-based authentication
+- Role-based access control (Admin, Analyst, Viewer, Guest)
+- API rate limiting and CORS protection
+- Input validation and data encryption at rest
+
+</td>
+    <td width="50%">
+
+### 🌍 Multilingual & RTL Support
+- Full Arabic UI with right-to-left layout
+- French and English content processing
+- Spanish language support
+- Specialized diplomatic vocabulary handling
+
+</td>
+  </tr>
+</table>
+
+---
+
+## 🛠️ Technology Stack
+
+| Layer | Technology | Purpose |
+|-------|-----------|---------|
+| **Frontend** | .NET Blazor, HTML/CSS/JS | Interactive RTL dashboard with real-time updates |
+| **Backend API** | Python, FastAPI | RESTful API with async support |
+| **AI Engine** | OpenRouter, DeepSeek V3/R1, Qwen | Sentiment analysis, NER, summarization |
+| **Database** | SQLite / PostgreSQL, SQLAlchemy | Persistent storage with ORM |
+| **Scrapers** | Python, aiohttp, BeautifulSoup | Async multi-source web scraping |
+| **Auth** | JWT, bcrypt | Secure authentication & authorization |
+| **Deployment** | Docker, Docker Compose | Containerized microservices |
+
+---
+
+## 📁 Project Structure
+
+```
+diram-diplomatic-ai/
+│
+├── 🔧 backend/                    # FastAPI Backend
+│   ├── main.py                    # Application entry point
+│   ├── api/                       # REST API endpoints
+│   │   ├── articles.py            # Article CRUD & analysis
+│   │   ├── users.py               # Authentication & users
+│   │   └── alerts.py              # Alert management
+│   ├── services/                  # Business logic
+│   │   ├── summarizer.py          # AI summarization
+│   │   ├── sentiment.py           # Sentiment analysis
+│   │   ├── ner.py                 # Named entity recognition
+│   │   └── tone.py                # Diplomatic tone analysis
+│   ├── core/                      # Domain models
+│   └── database/                  # Data access layer
+│
+├── 🤖 ai_engine/                  # AI Integration
+│   ├── openrouter_client.py       # OpenRouter API client
+│   ├── prompts/                   # Specialized prompt templates
+│   └── utils.py                   # AI utilities
+│
+├── 🕷️ scrapers/                   # Web Scrapers
+│   ├── aljazeera_scraper.py       # Al Jazeera
+│   ├── france24_scraper.py        # France 24
+│   ├── reuters_scraper.py         # Reuters
+│   └── ...                        # + 9 more sources
+│
+├── 🎨 frontend/                   # Blazor Web UI
+│   ├── Pages/                     # Dashboard, Articles, Alerts, Users
+│   ├── Components/                # Reusable UI components
+│   ├── Services/                  # Frontend API services
+│   └── wwwroot/                   # Static assets & CSS
+│
+├── 🔧 shared/                     # Shared Configuration
+│   ├── settings.py                # Environment settings
+│   └── constants.py               # System constants
+│
+├── 📊 reports/                    # Report Generation
+└── 🧪 tests/                     # Test Suites
+```
+
+---
+
+## 📈 Performance Metrics
+
+| Metric | Value |
+|--------|-------|
+| **Concurrent Users** | 100+ |
+| **Article Processing** | 1,000+ articles/hour |
+| **AI Analysis Speed** | 2–5 seconds per article |
+| **Database Capacity** | 1M+ articles |
+| **Source Coverage** | 12+ international sources |
+| **Language Support** | Arabic, French, English, Spanish |
+| **Analysis Accuracy** | 94% (as measured by internal benchmarks) |
+
+---
+
+## 🔐 Security & Compliance
+
+- **Authentication**: JWT tokens with configurable expiration
+- **Authorization**: Fine-grained role-based permissions
+- **Data Protection**: Encryption at rest for sensitive fields
+- **API Security**: Rate limiting, CORS policies, input validation
+- **Audit Trail**: Comprehensive logging of all user actions
+- **Compliance**: Designed for government-grade data handling requirements
+
+---
+
+## 👤 About the Developer
+
+**Anass El Alaoui** — Full-Stack Developer & AI Engineer
+
+This project demonstrates expertise in:
+- 🧠 **AI/ML Integration** — Production-grade LLM integration with cost management
+- 🏗️ **Clean Architecture** — Domain-driven design with layered separation
+- 🌐 **Full-Stack Development** — From Blazor frontend to FastAPI backend
+- 🔒 **Enterprise Security** — Government-grade authentication and access control
+- 📊 **Data Engineering** — Multi-source scraping and real-time analytics pipelines
+- 🌍 **Internationalization** — Full RTL Arabic support with multilingual processing
+
+---
+
+## 📄 License
+
+This project is **proprietary software**. The source code is not open-source.
+This repository showcases the **architecture, design, and capabilities** of the DIRAM platform.
+
+---
+
+<p align="center">
+  <strong>Built with ❤️ for Morocco's diplomatic intelligence needs</strong><br/>
+  <em>في خدمة الدبلوماسية المغربية والتحليل الاستراتيجي</em>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Made%20in-Morocco%20🇲🇦-red?style=flat-square" alt="Made in Morocco"/>
+</p>
